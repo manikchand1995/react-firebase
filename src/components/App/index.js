@@ -13,8 +13,10 @@ import AccountPage from '../Account';
 import AdminPage from '../Admin';
 import React, { Component } from 'react';
 import { withFirebase } from '../Firebase';
+import { AuthUserContext } from '../Session';
 
 import * as ROUTES from '../../constants/routes';
+import { withAuthentication } from '../Session';
 
 class App extends Component {
   constructor(props) {
@@ -36,12 +38,14 @@ class App extends Component {
   componentWillUnmount() {
     this.listener();
   }
-  
+
   render() {
     return (
+      <AuthUserContext.Provider value={this.state.authUser}>
+
       <Router>
         <div>
-          <Navigation authUser={this.state.authUser} />
+          <Navigation/>
  
           <hr/>
           <Route exact path={ROUTES.LANDING} component={LandingPage} />
@@ -53,8 +57,10 @@ class App extends Component {
       <Route path={ROUTES.ADMIN} component={AdminPage} />
         </div>
       </Router>
+      </AuthUserContext.Provider>
+
     );
   }
 }
  
-export default withFirebase(App);
+export default withAuthentication(App);
